@@ -92,7 +92,11 @@ export default function Perfil() {
         style={[styles.container, temaEscuro && styles.containerDark]}
         contentContainerStyle={{ paddingBottom: 80 }}
       >
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => router.back()}
+          accessibilityLabel="Voltar para tela anterior"
+        >
           <Ionicons 
             name="arrow-back" 
             size={24} 
@@ -138,13 +142,18 @@ export default function Perfil() {
         <View style={[styles.section, temaEscuro && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, temaEscuro && styles.textLight]}>Ações</Text>
 
-          <TouchableOpacity style={styles.actionButton} onPress={handleEditarPerfil}>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleEditarPerfil}
+            accessibilityLabel="Editar perfil do usuário"
+          >
             <Text style={styles.actionButtonText}>Editar Perfil</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.actionButton, styles.configButton]}
             onPress={() => router.push('/configuracoes')}
+            accessibilityLabel="Ir para configurações"
           >
             <Text style={styles.actionButtonText}>Configurações</Text>
           </TouchableOpacity>
@@ -152,6 +161,7 @@ export default function Perfil() {
           <TouchableOpacity
             style={[styles.actionButton, styles.logoutButton]}
             onPress={handleLogout}
+            accessibilityLabel="Sair da aplicação"
           >
             <Text style={styles.actionButtonText}>Sair</Text>
           </TouchableOpacity>
@@ -167,10 +177,16 @@ export default function Perfil() {
             <View style={[styles.modalContainer, temaEscuro && styles.modalContainerDark]}>
               <Text style={[styles.modalTitle, temaEscuro && styles.textLight]}>Deseja sair?</Text>
               <View style={styles.modalButtons}>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <TouchableOpacity 
+                  onPress={() => setModalVisible(false)}
+                  accessibilityLabel="Cancelar saída da aplicação"
+                >
                   <Text style={[styles.modalCancel, temaEscuro && styles.textMutedLight]}>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleLogoutConfirm}>
+                <TouchableOpacity 
+                  onPress={handleLogoutConfirm}
+                  accessibilityLabel="Confirmar saída da aplicação"
+                >
                   <Text style={styles.modalConfirm}>Sair</Text>
                 </TouchableOpacity>
               </View>
@@ -196,6 +212,7 @@ export default function Perfil() {
                         style={[styles.editInput, temaEscuro && styles.editInputDark]}
                         value={editUserData.nome}
                         onChangeText={text => setEditUserData({ ...editUserData, nome: text })}
+                        accessibilityLabel="Campo para editar nome"
                       />
                     </View>
                     <View style={{ marginBottom: 10 }}>
@@ -205,6 +222,7 @@ export default function Perfil() {
                         value={editUserData.email}
                         onChangeText={text => setEditUserData({ ...editUserData, email: text })}
                         keyboardType="email-address"
+                        accessibilityLabel="Campo para editar email"
                       />
                     </View>
                     <View style={{ marginBottom: 10 }}>
@@ -214,6 +232,7 @@ export default function Perfil() {
                         value={editUserData.telefone || ''}
                         onChangeText={text => setEditUserData({ ...editUserData, telefone: text })}
                         keyboardType="phone-pad"
+                        accessibilityLabel="Campo para editar telefone"
                       />
                     </View>
                     <View style={{ marginBottom: 10 }}>
@@ -222,14 +241,23 @@ export default function Perfil() {
                         style={[styles.editInput, temaEscuro && styles.editInputDark]}
                         value={editUserData.registro_profissional || ''}
                         onChangeText={text => setEditUserData({ ...editUserData, registro_profissional: text })}
+                        accessibilityLabel="Campo para editar registro profissional"
                       />
                     </View>
                   </ScrollView>
                   <View style={styles.modalButtons}>
-                    <TouchableOpacity onPress={handleCancelarEdicao} style={{ marginRight: 10 }}>
+                    <TouchableOpacity 
+                      onPress={handleCancelarEdicao} 
+                      style={{ marginRight: 10 }}
+                      accessibilityLabel="Cancelar edição do perfil"
+                    >
                       <Text style={[styles.modalCancel, temaEscuro && styles.textMutedLight]}>Cancelar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleSalvarEdicao} disabled={savingEdit}>
+                    <TouchableOpacity 
+                      onPress={handleSalvarEdicao} 
+                      disabled={savingEdit}
+                      accessibilityLabel="Salvar alterações do perfil"
+                    >
                       <Text style={[styles.modalConfirm, savingEdit && { color: '#aaa' }]}>
                         {savingEdit ? 'Salvando...' : 'Salvar'}
                       </Text>
@@ -245,22 +273,38 @@ export default function Perfil() {
       {/* Navbar fixa */}
       <View style={styles.navContainer}>
         <View style={styles.navBar}>
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/perfil')}>
+          <TouchableOpacity 
+            style={styles.navButton} 
+            onPress={() => router.push('/perfil')}
+            accessibilityLabel="Ir para perfil do usuário"
+          >
             <Ionicons name="person" size={24} color="#FFFFFF" />
             <Text style={styles.navText}>Perfil</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/notificacoes')}>
+          <TouchableOpacity 
+            style={styles.navButton} 
+            onPress={() => router.push('/notificacoes')}
+            accessibilityLabel="Ir para notificações"
+          >
             <Ionicons name="notifications" size={24} color="#FFFFFF" />
             <Text style={styles.navText}>Notificações</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/leito/lista_leitos')}>
+          <TouchableOpacity 
+            style={styles.navButton} 
+            onPress={() => router.push('/leito/lista_leitos')}
+            accessibilityLabel="Ir para lista de leitos"
+          >
             <Ionicons name="bed" size={24} color="#FFFFFF" />
             <Text style={styles.navText}>Leitos</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/configuracoes')}>
+          <TouchableOpacity 
+            style={styles.navButton} 
+            onPress={() => router.push('/configuracoes')}
+            accessibilityLabel="Ir para configurações"
+          >
             <Ionicons name="settings" size={24} color="#FFFFFF" />
             <Text style={styles.navText}>Config</Text>
           </TouchableOpacity>
