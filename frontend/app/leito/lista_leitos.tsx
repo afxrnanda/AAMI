@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeContext } from '../../themeContext';
 import { buscarLeitos, LeitoMonitoramento } from '../../services/api';
 import Header from '../../components/Header';
+import PrevisaoTermino from '../../components/PrevisaoTermino';
 
 type FiltroTipo = 'todos' | 'em-andamento' | 'finalizada' | 'manutencao' | 'livres' | 'alertas' | 'pausados';
 
@@ -18,37 +19,6 @@ const getStatusInfo = (status: LeitoMonitoramento['status_gotejamento']) => {
     case 'pausado': return { text: 'Pausado', color: '#8E8E93', icon: '⏸️' };
     case 'nenhum': return { text: 'Livre', color: '#8E8E93', icon: '⚪' };
     default: return { text: 'Desconhecido', color: '#666', icon: '❓' };
-  }
-};
-
-const formatTempoRestante = (previsao?: string) => {
-  if (!previsao) return '';
-  
-  try {
-    const agora = new Date();
-    const termino = new Date(previsao);
-    
-    // Validar se a data é válida
-    if (isNaN(termino.getTime())) {
-      return 'Data inválida';
-    }
-    
-    const diff = termino.getTime() - agora.getTime();
-
-    if (diff <= 0) return 'Finalizado';
-    
-    // Limitar a exibição para tempos muito longos (mais de 24h)
-    if (diff > 24 * 60 * 60 * 1000) {
-      return 'Mais de 24h';
-    }
-
-    const horas = Math.floor(diff / (1000 * 60 * 60));
-    const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    return `${horas > 0 ? horas + 'h ' : ''}${minutos}min restantes`;
-  } catch (error) {
-    console.error('Erro ao formatar tempo restante:', error);
-    return 'Erro no cálculo';
   }
 };
 
@@ -196,7 +166,13 @@ export default function LeitosList() {
             <ProgressBar progresso={progresso} />
             <View style={styles.progressoDetails}>
               <Text style={[styles.peso, temaEscuro && styles.textMutedDark]}>{item.peso_atual_g}g / {item.peso_inicial_g}g</Text>
-              <Text style={[styles.tempoRestante, temaEscuro && styles.textMutedDark]}>{formatTempoRestante(calcularPrevisaoTempo()?.toISOString())}</Text>
+              <Text style={[styles.tempoRestante, temaEscuro && styles.textMutedDark]}>
+                <PrevisaoTermino
+                  pesoInicial={item.peso_inicial_g}
+                  pesoAtual={item.peso_atual_g}
+                  inicioMedicacao={item.inicio_medicacao}
+                />
+              </Text>
             </View>
           </View>
         ) : (

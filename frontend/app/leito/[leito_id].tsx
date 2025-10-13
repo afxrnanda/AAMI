@@ -15,6 +15,7 @@ import {
 } from '../../services/api';
 import CustomModal from '../../components/CustomModal';
 import { useThemeContext } from '../../themeContext';
+import PrevisaoTermino from '../../components/PrevisaoTermino';
 
 const getStatusInfo = (status: LeitoMonitoramento['status_gotejamento']) => {
   switch (status) {
@@ -58,7 +59,6 @@ export default function LeitoDetalhe() {
   const [loading, setLoading] = useState(true);
   const [loadingIntercorrencias, setLoadingIntercorrencias] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [previsaoCalculada, setPrevisaoCalculada] = useState<Date | null>(null);
   const [showIntercorrenciaModal, setShowIntercorrenciaModal] = useState(false);
   const [showNovaMedicacaoModal, setShowNovaMedicacaoModal] = useState(false);
   const [intercorrenciaText, setIntercorrenciaText] = useState('');
@@ -69,7 +69,6 @@ export default function LeitoDetalhe() {
     message: '',
     onConfirm: () => {}
   });
-  const [agora, setAgora] = useState(Date.now());
   const [dadosNovaMedicacao, setDadosNovaMedicacao] = useState<DadosNovaMedicacaoSimplificada>({
     observacoes: ''
   });
@@ -111,21 +110,7 @@ export default function LeitoDetalhe() {
     if (leito && leito.ocupado) {
       carregarIntercorrencias();
     }
-  }, [leito, carregarIntercorrencias]);
-
-  useEffect(() => {
-    if (!leito) return;
-    const previsaoCalculada = calcularPrevisaoTempo();
-    setPrevisaoCalculada(previsaoCalculada);
-  }, [leito]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAgora(Date.now());
-    }, 1000);
-  
-    return () => clearInterval(timer);
-  }, []);
+  }, [leito, carregarIntercorrencias]); 
 
   if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
   if (!leito) return <Text style={[styles.error, temaEscuro && styles.textLight]}>Leito não encontrado.</Text>;
@@ -134,43 +119,6 @@ export default function LeitoDetalhe() {
       ? Math.min(100, Math.max(0, ((leito.peso_inicial_g - leito.peso_atual_g) / leito.peso_inicial_g) * 100))
       : 0;
   const statusInfo = getStatusInfo(leito.status_gotejamento);
-
-  // Calcular previsão de tempo baseado no peso
-  const calcularPrevisaoTempo = () => {
-    if (!leito.peso_inicial_g || !leito.peso_atual_g || !leito.inicio_medicacao) {
-      return null;
-    }
-    if (isNaN(leito.peso_inicial_g) || isNaN(leito.peso_atual_g)) {
-      return null;
-    }
-    if (leito.peso_inicial_g <= 0) {
-      return null;
-    }
-    if (leito.peso_atual_g < 0) {
-      return null;
-    }
-    const inicioMedicacao = new Date(leito.inicio_medicacao);
-    if (isNaN(inicioMedicacao.getTime())) {
-      return null;
-    }
-    const tempoDecorrido = Date.now() - inicioMedicacao.getTime();
-    const pesoConsumido = leito.peso_inicial_g - leito.peso_atual_g;
-    if (pesoConsumido <= 0 || tempoDecorrido <= 0) {
-      return null;
-    }
-    const taxaConsumo = pesoConsumido / tempoDecorrido;
-    if (taxaConsumo <= 0 || !isFinite(taxaConsumo)) {
-      return null;
-    }
-    const tempoRestanteMs = leito.peso_atual_g / taxaConsumo;
-    if (tempoRestanteMs <= 0 || !isFinite(tempoRestanteMs) || tempoRestanteMs > 24 * 60 * 60 * 1000) {
-      return null;
-    }
-    
-    const previsaoTermino = new Date(Date.now() + tempoRestanteMs);
-    
-    return previsaoTermino;
-  };
 
   const handlePausarRetomar = () => {
     if (!leito) return;
@@ -326,13 +274,11 @@ export default function LeitoDetalhe() {
                         <View style={styles.infoRow}>
                             <Text style={[styles.infoLabel, temaEscuro && styles.textMutedLight]}>Previsão de Término:</Text>
                             <Text style={[styles.infoValue, temaEscuro && styles.textLight]}>
-                              {
-                                previsaoCalculada 
-                                  ? formatData(previsaoCalculada.toISOString())
-                                  : leito.previsao_termino 
-                                    ? formatData(leito.previsao_termino)
-                                    : 'Calculando...'
-                              }
+                            <PrevisaoTermino
+                              pesoInicial={leito.peso_inicial_g}
+                              pesoAtual={leito.peso_atual_g}
+                              inicioMedicacao={leito.inicio_medicacao}
+                            />
                             </Text>
                         </View>
                         <View style={styles.infoRow}>
