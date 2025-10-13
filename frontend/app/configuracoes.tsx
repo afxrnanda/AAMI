@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Switch, ScrollView, } from 'r
 import { useRouter } from 'expo-router';
 import { useThemeContext } from '../themeContext';
 import CustomModal from '../components/CustomModal';
+import Header from '../components/Header';
 
 export default function Configuracoes() {
   const [notificacoes, setNotificacoes] = useState(true);
@@ -21,15 +22,7 @@ export default function Configuracoes() {
         style={[styles.container, temaEscuro && styles.containerDark]}
         contentContainerStyle={{ paddingBottom: 140 }}
       >
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color={temaEscuro ? 'white' : '#333'}
-          />
-        </TouchableOpacity>
-
-        <Text style={[styles.title, temaEscuro && styles.textDark]}>Configurações</Text>
+        <Header title="Configurações" />
 
         <View style={[styles.section, temaEscuro && styles.sectionDark]}>
           <Text style={[styles.sectionTitle, temaEscuro && styles.textDark]}>Notificações</Text>
@@ -128,7 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    paddingTop: 20,
   },
   containerDark: {
     backgroundColor: '#121212',

@@ -6,6 +6,7 @@ import { Chip } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeContext } from '../../themeContext';
 import { buscarLeitos, LeitoMonitoramento } from '../../services/api';
+import Header from '../../components/Header';
 
 type FiltroTipo = 'todos' | 'em-andamento' | 'finalizada' | 'manutencao' | 'livres' | 'alertas' | 'pausados';
 
@@ -208,72 +209,68 @@ export default function LeitosList() {
   };
 
   return (
-    <View style={[styles.container, temaEscuro && styles.containerDark]}>
-      {/* Botão de voltar */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color={temaEscuro ? "white" : "#333"} />
-      </TouchableOpacity>
-
-      <Text style={[styles.title, temaEscuro && styles.textDark]}>Leitos</Text>
-
-      <View style={styles.filtrosContainer}>
-        <View style={styles.filtrosGrid}>
-          {filtros.filter(filtro => filtro.count > 0).map((filtro) => (
-            <Chip
-              key={filtro.id}
-              selected={filtroAtivo === filtro.id}
-              onPress={() => setFiltroAtivo(filtro.id)}
-              style={[
-                styles.chip,
-                temaEscuro ? (filtroAtivo === filtro.id ? styles.chipSelecionadoDark : styles.chipDark) : (filtroAtivo === filtro.id ? styles.chipSelecionado : null),
-              ]}
-              textStyle={[
-                styles.chipText,
-                temaEscuro ? (filtroAtivo === filtro.id ? styles.chipTextSelecionadoDark : styles.chipTextDark) : (filtroAtivo === filtro.id ? styles.chipTextSelecionado : null),
-              ]}
-              showSelectedOverlay
-            >
-              {filtro.icon} {filtro.label} ({filtro.count})
-            </Chip>
-          ))}
+    <View style={{flex: 1}}>
+      <Header title="Leitos" />
+      <View style={[styles.container, temaEscuro && styles.containerDark]}>
+        <View style={styles.filtrosContainer}>
+          <View style={styles.filtrosGrid}>
+            {filtros.filter(filtro => filtro.count > 0).map((filtro) => (
+              <Chip
+                key={filtro.id}
+                selected={filtroAtivo === filtro.id}
+                onPress={() => setFiltroAtivo(filtro.id)}
+                style={[
+                  styles.chip,
+                  temaEscuro ? (filtroAtivo === filtro.id ? styles.chipSelecionadoDark : styles.chipDark) : (filtroAtivo === filtro.id ? styles.chipSelecionado : null),
+                ]}
+                textStyle={[
+                  styles.chipText,
+                  temaEscuro ? (filtroAtivo === filtro.id ? styles.chipTextSelecionadoDark : styles.chipTextDark) : (filtroAtivo === filtro.id ? styles.chipTextSelecionado : null),
+                ]}
+                showSelectedOverlay
+              >
+                {filtro.icon} {filtro.label} ({filtro.count})
+              </Chip>
+            ))}
+          </View>
         </View>
-      </View>
 
-      <View style={styles.resultadosContainer}>
-        <Text style={[styles.resultadosText, temaEscuro && styles.textMutedDark]}>
-          {leitosFiltrados.length} de {leitos.length} leitos
-        </Text>
-      </View>
+        <View style={styles.resultadosContainer}>
+          <Text style={[styles.resultadosText, temaEscuro && styles.textMutedDark]}>
+            {leitosFiltrados.length} de {leitos.length} leitos
+          </Text>
+        </View>
 
-      <FlatList
-        data={leitosFiltrados}
-        keyExtractor={item => item.leito_id.toString()}
-        renderItem={renderLeito}
-        contentContainerStyle={{ paddingBottom: 80 }}
-      />
+        <FlatList
+          data={leitosFiltrados}
+          keyExtractor={item => item.leito_id.toString()}
+          renderItem={renderLeito}
+          contentContainerStyle={{ paddingBottom: 80 }}
+        />
 
-      {/* Navbar fixa */}
-      <View style={styles.navContainer}>
-        <View style={styles.navBar}>
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/perfil')}>
-            <Ionicons name="person" size={24} color="#FFFFFF" />
-            <Text style={styles.navText}>Perfil</Text>
-          </TouchableOpacity>
+        {/* Navbar fixa */}
+        <View style={styles.navContainer}>
+          <View style={styles.navBar}>
+            <TouchableOpacity style={styles.navButton} onPress={() => router.push('/perfil')}>
+              <Ionicons name="person" size={24} color="#FFFFFF" />
+              <Text style={styles.navText}>Perfil</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/notificacoes')}>
-            <Ionicons name="notifications" size={24} color="#FFFFFF" />
-            <Text style={styles.navText}>Notificações</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton} onPress={() => router.push('/notificacoes')}>
+              <Ionicons name="notifications" size={24} color="#FFFFFF" />
+              <Text style={styles.navText}>Notificações</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/leito/lista_leitos')}>
-            <Ionicons name="bed" size={24} color="#FFFFFF" />
-            <Text style={styles.navText}>Leitos</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton} onPress={() => router.push('/leito/lista_leitos')}>
+              <Ionicons name="bed" size={24} color="#FFFFFF" />
+              <Text style={styles.navText}>Leitos</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/configuracoes')}>
-            <Ionicons name="settings" size={24} color="#FFFFFF" />
-            <Text style={styles.navText}>Config</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton} onPress={() => router.push('/configuracoes')}>
+              <Ionicons name="settings" size={24} color="#FFFFFF" />
+              <Text style={styles.navText}>Config</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

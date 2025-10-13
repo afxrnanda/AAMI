@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { buscarNotificacoes, marcarNotificacaoComoLida, Notificacao } from '../services/api';
 import { useThemeContext } from '../themeContext';
+import Header from '../components/Header';
 
 export default function Notificacoes() {
   const { temaEscuro } = useThemeContext();
@@ -156,20 +157,11 @@ export default function Notificacoes() {
 
   return (
     <View style={[styles.container, temaEscuro && styles.containerDark]}>
-      <View style={[styles.header, temaEscuro && styles.headerDark]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color={temaEscuro ? '#FFF' : '#333'} />
-        </TouchableOpacity>
-        <Text style={[styles.title, temaEscuro && styles.textLight]}>Notificações</Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.headerButton} onPress={marcarTodasComoLidas}>
-            <Text style={[styles.headerButtonText, temaEscuro && styles.textLight]}>Marcar lidas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.headerButton} onPress={limparNotificacoes}>
-            <Text style={[styles.headerButtonText, temaEscuro && styles.textLight]}>Limpar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Header 
+        title="Notificações"
+        onMarcarLidas={marcarTodasComoLidas}
+        onLimpar={limparNotificacoes}
+      />  
 
       <View style={[styles.filtros, temaEscuro && styles.filtrosDark]}>
         <TouchableOpacity 
@@ -256,7 +248,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    paddingTop: 20,
   },
   containerDark: {
     backgroundColor: '#121212',
@@ -290,17 +281,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
+  headerActionsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 40,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
-  headerDark: {
+  headerActionsContainerDark: {
     backgroundColor: '#1E1E1E',
     borderBottomColor: '#333',
   },

@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Modal, TextInput 
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeContext } from '../themeContext';
+import Header from '../components/Header';
 
 interface Usuario {
   nome: string;
@@ -92,13 +93,7 @@ export default function Perfil() {
         style={[styles.container, temaEscuro && styles.containerDark]}
         contentContainerStyle={{ paddingBottom: 80 }}
       >
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons 
-            name="arrow-back" 
-            size={24} 
-            color={temaEscuro ? 'white' : '#333'} 
-          />
-        </TouchableOpacity>
+        <Header title="Perfil"/>
 
         <View style={[styles.header, temaEscuro && styles.headerDark]}>
           {userData ? (
@@ -277,18 +272,6 @@ const styles = StyleSheet.create({
   },
   containerDark: {
     backgroundColor: '#121212',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 35,
-    left: 20,
-    zIndex: 10,
-    backgroundColor: '#fffff',
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   header: {
     alignItems: 'center',
